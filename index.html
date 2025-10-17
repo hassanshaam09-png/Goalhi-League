@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GOALHI LEAGUE</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('image2.jpg'); /* Add your background image */
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 8px black;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 0;
+      color: #ddd;
+    }
+
+    .btn {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      margin: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      opacity: 0.8;
+    }
+
+    .out-btn {
+      background-color: #dc3545;
+    }
+
+    .clear-btn {
+      background-color: #ffc107;
+      color: black;
+    }
+
+    .attendance-list {
+      margin-top: 40px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 15px;
+      padding: 20px;
+      display: inline-block;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      font-size: 1.1rem;
+    }
+
+    li {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- 🔰 Website Title -->
+  <h1>🏆 GOALHI LEAGUE 2025</h1>
+  <h2></h2>
+
+  <p></p>
+
+  <!-- Buttons -->
+  <button class="btn in-btn" onclick="markAttendance('IN')">IN</button>
+  <button class="btn out-btn" onclick="markAttendance('OUT')">OUT</button>
+  <button class="btn clear-btn" onclick="clearAttendance()">CLEAR</button>
+
+  <!-- Attendance List -->
+  <div class="attendance-list">
+    <h2>TODAY LIST</h2>
+    <ul id="attendance"></ul>
+  </div>
+
+  <script>
+    const attendanceList = document.getElementById('attendance');
+    const today = new Date().toLocaleDateString();
+    const storageKey = `attendance_${today}`;
+
+    let attendance = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+    function saveAttendance() {
+      localStorage.setItem(storageKey, JSON.stringify(attendance));
+    }
+
+    function displayAttendance() {
+      attendanceList.innerHTML = '';
+      attendance.forEach((entry) => {
+        const li = document.createElement('li');
+        li.textContent = `${entry.name} - ${entry.status}`;
+        attendanceList.appendChild(li);
+      });
+    }
+
+    function markAttendance(status) {
+      const name = prompt('Enter your name:');
+      if (name) {
+        const existing = attendance.find((e) => e.name === name);
+        if (existing) {
+          existing.status = status;
+        } else {
+          attendance.push({ name, status });
+        }
+        saveAttendance();
+        displayAttendance();
+      }
+    }
+
+    function clearAttendance() {
+      if (confirm('Are you sure you want to clear all attendance for today?')) {
+        attendance = [];
+        saveAttendance();
+        displayAttendance();
+      }
+    }
+
+    // Clear old days
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith('attendance_') && key !== storageKey) {
+        localStorage.removeItem(key);
+      }
+    });
+
+    displayAttendance();
+  </script>
+</body>
+</html>
